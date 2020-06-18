@@ -1,0 +1,13 @@
+version: '3'
+services:
+  jupyter:
+    image: "chapmanbe/mimic34md_jupyter:latest"
+    ports:
+      - "8994:8888"
+    environment:
+      - JUPYTER_TOKEN=mimic34md
+      - JUPYTER_ENABLE_LAB=yes
+      - USE_HTTPS=yes
+    volumes:
+      - "${PWD}/..:/home/jovyan/code"
+      - "${PWD}/data:/home/shared"
