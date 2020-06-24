@@ -400,3 +400,11 @@ def load_questions(file):
     with open(os.path.join(_dbdir(), file), "r") as fp:
         questions = [Question(**q) for q in yaml.load_all(fp, Loader=yaml.SafeLoader)]
     return questions
+
+def create_question_bank(qfile, tag=None):
+    _questions = load_questions(qfile)
+    if tag:
+        return [get_widget(q) for q in _questions if tag in q.tags]
+    else:
+        return [get_widget(q) for q in _questions]
+
