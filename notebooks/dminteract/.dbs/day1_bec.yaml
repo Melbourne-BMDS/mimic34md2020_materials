@@ -1,0 +1,66 @@
+kind: FR
+question: '#### Data and Metadata Brainstorming
+
+
+  _Nothing seems to be a datum per se. Rather, being a datum is an external property._
+  (Floridia)
+
+
+  What we consider to be data and what we consider to be metadata may be question-dependent.
+
+
+  We used the example of blood pressure with the numeric value of "132" as the primary
+  data and "mmHg" as metadata.
+
+
+  Think of the administration of a medication to a patient. Consider the chemical
+  formula of the drug as the primary data, write down all the different data that
+  might be considered metadata for a drug administration to a patient in the ICU.
+
+  '
+responses:
+  0:
+    feedback: '#### Here are some of the things I thought of:
+
+
+      - Dose
+
+      - Route of administration
+
+      - Who administered it
+
+      - Who ordered it
+
+      - When it was ordered
+
+      - The time it was administered'
+    status: null
+tags: data, information
+uuid: cc849596-b617-11ea-b07b-0242ac1b0003
+---
+kind: MC
+question: '#### GDI
+
+
+  According to the general definition of information (GDI), what is the most likely
+  explanation of why the following would not be viewed as valid blood pressure information:
+
+
+  10599.13 / 17651.884 Pa'
+responses:
+  Pascals are not a medically meaningful unit of measurement.:
+    feedback: By convention we use mmHg, but Pascals are actually the SI unit of pressure
+      with a well defined conversion to mmHg.
+    status: false
+  The data are not well formed, because the diastolic pressure is listed over the systolic pressure.:
+    feedback: ''
+    status: true
+  The primary data need to be integers.:
+    feedback: While blood pressure might commonly be recorded using whole numbers,
+      as a measured value real numbers would actually be the most appropriate.
+    status: false
+  The values are not within a physiologically valid range.:
+    feedback: The pressures correspond to roughly 79.5 mmHg and 132 mmHg.
+    status: false
+tags: data, information
+uuid: 8add0c98-b619-11ea-b07b-0242ac1b0003

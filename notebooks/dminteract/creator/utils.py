@@ -304,7 +304,7 @@ class MCWidget(QWidget):
         random.shuffle(self.__sanswers)
         options = [a[0] for a in self.__sanswers]
         self.answer = ipw.RadioButtons( options = options,
-                                            description = '')
+                                            description = '', layout=ipw.Layout(width="100%"))
         self.submit.on_click(self.onsubmit)
         super(MCWidget, self).__init__(q, children=[self.label,
                                                  self.question, 
@@ -338,7 +338,7 @@ class ATWidget(QWidget):
         random.shuffle(self.__sanswers)
         options = [a[0] for a in self.__sanswers]
         self.answer = ipw.SelectMultiple( options = options,
-                                            description = '')
+                                            description = '', layout=ipw.Layout(width="100%"))
         self.submit.on_click(self.onsubmit)
         super(ATWidget, self).__init__(q, children=[self.label,
                                                  self.question, 
@@ -388,9 +388,13 @@ def get_widget(q):
     else:
         raise ValueError("no matching widget for question type")
 
-def save_questions(questions, file):
+def save_questions(questions, file, append=False):
+    if append:
+        qs = load_questions(file) + questions
+    else:
+        qs = questions
     with open(os.path.join(_dbdir(), file), "w") as fp:
-        yaml.dump_all([q.to_dict() for q in questions],fp)
+        yaml.dump_all([q.to_dict() for q in qs],fp)
 
 
 def load_questions(file):
