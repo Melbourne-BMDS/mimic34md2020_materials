@@ -1,0 +1,57 @@
+kind: TF
+question: '#### Python
+
+
+  Python is a compiled language'
+responses:
+  F:
+    feedback: Great job!
+    status: true
+  T:
+    feedback: Sorry, it is a interpreted language.
+    status: false
+tags: languages
+uuid: 141ddd40-b5f5-11ea-a5db-0242ac1b0003
+---
+kind: MC
+question: '#### Data and Information
+
+
+  Which of the following would best be described as metadata for a blood pressure
+  measurement.'
+responses:
+  '135':
+    feedback: This is most likely the data value
+    status: false
+  '80':
+    feedback: another data value
+    status: false
+  David Bowie:
+    feedback: Unrelated to blood pressure measurements.
+    status: false
+  mmHg:
+    feedback: Yes. Units of measurement is a kind of metadata.
+    status: true
+tags: data, information
+uuid: 815e18de-b5f5-11ea-a5db-0242ac1b0003
+---
+kind: AT
+question: '#### MIMIC III Schema
+
+
+  Which of these values are __NOT__ columns in the patient table'
+responses:
+  dob:
+    feedback: Date of birth, which is a required value
+    status: false
+  icustay_id:
+    feedback: ''
+    status: true
+  subject_id:
+    feedback: ''
+    status: false
+  unitofm:
+    feedback: A unit of measurement column from chartevents
+    status: true
+tags: dbs, mimiciii
+uuid: d3f22806-b5f5-11ea-a5db-0242ac1b0003

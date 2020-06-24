@@ -5,10 +5,10 @@ __DBDIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), ".dbs")
 __DATADIR = os.path.join(os.path.abspath(os.path.dirname(__file__)), "data")
 
 if not os.path.exists(__DBDIR):
-    os.mkdir(DBDIR)
+    os.mkdir(__DBDIR)
 
 if not os.path.exists(__DATADIR):
-    os.mkdir(DATADIR)
+    os.mkdir(__DATADIR)
 
 def _dbdir():
     return __DBDIR

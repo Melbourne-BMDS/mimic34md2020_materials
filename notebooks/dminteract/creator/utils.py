@@ -11,15 +11,28 @@ import ipywidgets as ipw
 import markdown
 import random
 import yaml
+import tempfile
+import pickle
+
+from .. __init__ import _dbdir, _datadir
+TEMPDIR = tempfile.gettempdir()
+
+def save_temp_questions(qs):
+    with open(os.path.join(TEMPDIR, "questions.pickle"), "wb") as fp:
+        pickle.dump(qs, fp)
 
 class Question:
     def __init__(self,**kwargs):
         self.__kind = kwargs.pop("kind", None)
         self.__question = kwargs.pop("question", None)
         self.__tags = kwargs.pop("tags", None)
-        self.__answer = kwargs.pop("answer", None)
+        self.__responses = kwargs.pop("responses", None)
         self.__uuid = kwargs.pop("uuid", None)
         self.__additional_args = kwargs
+    def to_dict(self):
+        return {"kind":self.kind, "question":self.question,
+                "tags":self.tags, "responses":self.responses,
+                "uuid":self.uuid}
 
     @property
     def kind(self):
@@ -31,8 +44,8 @@ class Question:
     def tags(self):
         return self.__tags
     @property
-    def answer(self):
-        return self.__answer
+    def responses(self):
+        return self.__responses
     @property
     def uuid(self):
         return self.__uuid
@@ -42,9 +55,10 @@ class Question:
 
 
 class TFQuestion(ipw.VBox):
+    prompt = "Enter question using Markdown formatting"
     def __init__(self, questions):
         self.questions = questions
-        self.qlabel = ipw.Label(value="Enter question using Markdown formatting")
+        self.qlabel = ipw.Label(value=self.prompt)
         self.question = ipw.Textarea()
         self.tags = ipw.Text(description="tags")
         self.qtbox = ipw.VBox([self.qlabel, self.question, self.tags])
@@ -58,18 +72,27 @@ class TFQuestion(ipw.VBox):
         self.commit.on_click(self.commit_question)
         super(TFQuestion, self).__init__(children=[self.qbox, self.feedback, self.commit])
         
-        
+    def reset_question(self):
+        self.question.value = ""
+        self.tfb.value = ""
+        self.ffb.value = ""
     def commit_question(self, *args):
         try:
-            self.qlabel.value = "submitted"
             q = {"kind":"TF"}
             q["question"] = self.question.value
             q["tags"] = self.tags.value
 
-            q["correct_answer"] = self.answer.value
-            q["feedback"] = {"T":self.tfb.value, "F":self.ffb.value}
-            q["uuid"] = uuid.uuid1()
-            self.questions.append(q)
+            tmp = {}
+            responses = ['T','F']
+            for i in range(2):
+                tmp[responses[i]] = {
+                          "status":responses[i] == self.answer.value,
+                          "feedback": self.tfb.value if responses[i] == 'T' else self.ffb.value}
+            q["responses"] = tmp
+            q["uuid"] = str(uuid.uuid1())
+            self.questions.append(Question(**q))
+            self.reset_question()
+            save_temp_questions(self.questions)
 
         except Exception as error:
             self.qlabel.value = "submission failed: %s"%error
@@ -96,23 +119,31 @@ class MCQuestion(ipw.VBox):
         self.commit.on_click(self.commit_question)
         super(MCQuestion, self).__init__(children=[self.qtbox, self.abox, self.commit])
         
-        
+    
+    def reset_question(self):
+        self.question.value = ""
+        for a in self.answers:
+            a.value = ""
+        for a in self.feedback:
+            a.value = ""
+
     def commit_question(self, *args):
         try:
-            self.qlabel.value = "submitted"
             q = {"kind":"MC"}
             q["question"] = self.question.value
             q["tags"] = self.tags.value
 
-            q["correct_answer"] = self.answer.value
             tmp = {}
             for i in range(self.num_answers):
-                tmp[i] = {"answer": self.answers[i].value,
+                tmp[self.answers[i].value] = {
+                          "status": i==self.answer.value,
                           "feedback": self.feedback[i].value}
-            q["answers"] = tmp
-            q["uuid"] = uuid.uuid1()
+            q["responses"] = tmp
+            q["uuid"] = str(uuid.uuid1())
 
-            self.questions.append(q)
+            self.questions.append(Question(**q))
+            self.reset_question()
+            save_temp_questions(self.questions)
         except Exception as error:
             self.qlabel.value = "submission failed: %s"%error
 
@@ -138,6 +169,12 @@ class ATQuestion(ipw.VBox):
         self.commit.on_click(self.commit_question)
         super(ATQuestion, self).__init__(children=[self.qtbox, self.atab, self.commit])
         
+    def reset_question(self):
+        self.question.value = ""
+        for a in self.answers:
+            a.value = ""
+        for a in self.feedback:
+            a.value = ""
         
     def commit_question(self, *args):
         try:
@@ -148,13 +185,15 @@ class ATQuestion(ipw.VBox):
 
             tmp = {}
             for i in range(self.num_answers):
-                tmp[i] = {"answer": self.answers[i].value,
+                tmp[self.answers[i].value] = {
                           "feedback": self.feedback[i].value,
-                          "status": self.status[i].value}
-            q["answers"] = tmp
-            q["uuid"] = uuid.uuid1()
+                          "status": self.status[i].value=='T'}
+            q["responses"] = tmp
+            q["uuid"] = str(uuid.uuid1())
 
-            self.questions.append(q)
+            self.questions.append(Question(**q))
+            self.reset_question()
+            save_temp_questions(self.questions)
         except Exception as error:
             self.qlabel.value = "submission failed: %s"%error
 
@@ -173,6 +212,9 @@ class FRQuestion(ipw.VBox):
         self.commit.on_click(self.commit_question)
         super(FRQuestion, self).__init__(children=[self.qtbox, self.feedback, self.commit])
         
+    def reset_question(self):
+        self.question.value = ""
+        self.feedback.value = ""
         
     def commit_question(self, *args):
         try:
@@ -180,133 +222,125 @@ class FRQuestion(ipw.VBox):
             q = {"kind":"FR"}
             q["question"] = self.question.value
             q["tags"] = self.tags.value
-            q["feedback"] = self.feedback.value
-            q["uuid"] = uuid.uuid1()
+            q["responses"] = {0:{"status":None, "feedback":self.feedback.value}}
+            q["uuid"] = str(uuid.uuid1())
 
-            self.questions.append(q)
+            self.questions.append(Question(**q))
+            self.reset_question()
+            save_temp_questions(self.questions)
         except Exception as error:
             self.qlabel.value = "submission failed: %s"%error            
 
+
 class QWidget(ipw.VBox):
-    def __init__(self, q):
+    def __init__(self, q, *args, **kwargs):
         self.__q = q
-        super(QWidget, self).__init__(q)
+        super(QWidget,self).__init__(*args, **kwargs)
 
+    @property
+    def q(self):
+        return self.__q
 
-    def kind(self):
-        return self.__q["kind"]
-    def question(self):
-        return self.__q["question"]
-    def tags(self):
-        return self.__q["tags"]
-    def feedback(self):
-        return self.__q["feedback"]
-class FRWidget(ipw.VBox):
+class FRWidget(QWidget):
     def __init__(self, q):
-        if q["kind"] != "FR":
+        if q.kind != "FR":
             raise TypeError("wrong type of question")
-        self.__q = q
         self.label = ipw.Label(value="Free Response")
-        self.description = ipw.HTML(markdown.markdown(q["question"]))
+        self.description = ipw.HTML(markdown.markdown(q.question))
         self.feedback = ipw.HTML()
         self.submit = ipw.Button(description="submit")
         self.answer = ipw.Textarea(value="", placeholder="Type answer here.")
         self.submit.on_click(self.onsubmit)
-        super(FRWidget, self).__init__(children=[self.description, 
+        super(FRWidget, self).__init__(q, children=[self.description, 
                                                  self.answer, 
                                                  self.submit,
                                                  self.feedback])
     def onsubmit(self, *args):
         try:
-            self.feedback.value = markdown.markdown(self.__q["feedback"])
+            self.feedback.value = markdown.markdown(self.q.responses[0]["feedback"])
         except Exception as error:
             self.label.value = error
 
 
-class TFWidget(ipw.VBox):
+class TFWidget(QWidget):
     def __init__(self, q):
-        if q["kind"] != "TF":
+        if q.kind != "TF":
             raise TypeError("wrong type of question")
-        self.__q = q
         self.label = ipw.Label(value="Question")
-        self.description = ipw.HTML(markdown.markdown(q["question"]))
+        self.description = ipw.HTML(markdown.markdown(q.question))
         self.feedback = ipw.HTML()
         self.submit = ipw.Button(description="submit")
         self.answer = ipw.RadioButtons( options = ["T","F"],
                                             description = '')
         self.submit.on_click(self.onsubmit)
-        super(TFWidget, self).__init__(children=[self.label,
+        super(TFWidget, self).__init__(q, children=[self.label,
                                                  self.description, 
                                                  self.answer, 
                                                  self.submit,
                                                  self.feedback])
+
+
     def onsubmit(self, *args):
         try:
             template = "%s %s"
-            if self.answer.value == self.__q["correct_answer"]:
+            if self.q.responses[self.answer.value]["status"]:
                 mode = "Correct: "
             else:
                 mode = "Incorrect: "
             self.feedback.value = template%(mode,
-                                            markdown.markdown(self.__q["feedback"][self.answer.value]))
+                                            markdown.markdown(self.q.responses[self.answer.value]["feedback"]))
         except Exception as error:
             self.label.value = error
 
-class MCWidget(ipw.VBox):
+class MCWidget(QWidget):
     def __init__(self, q):
-        if q["kind"] != "MC":
+        if q.kind != "MC":
             raise TypeError("wrong type of question")
-        self.__q = q
         self.label = ipw.Label(value="Select the Correct Answer")
-        self.question = ipw.HTML(markdown.markdown(q["question"]))
+        self.question = ipw.HTML(markdown.markdown(q.question))
         self.feedback = ipw.HTML()
         self.submit = ipw.Button(description="submit") 
-        self.__sanswers = list(q["answers"].items())
+        self.__sanswers = list(q.responses.items())
         random.shuffle(self.__sanswers)
-        options = [a[1]["answer"] for a in self.__sanswers]
+        options = [a[0] for a in self.__sanswers]
         self.answer = ipw.RadioButtons( options = options,
                                             description = '')
         self.submit.on_click(self.onsubmit)
-        super(MCWidget, self).__init__(children=[self.label,
+        super(MCWidget, self).__init__(q, children=[self.label,
                                                  self.question, 
                                                  self.answer, 
                                                  self.submit,
                                                  self.feedback])
-    def iscorrect(self, a):
-        return self.__q["answers"][self.__q["correct_answer"]]["answer"] == a
-        
-
-    def aindex(self, a):
-        return [_a[1]["answer"] for _a in self.__sanswers].index(a)
             
     def onsubmit(self, *args):
         try:
             template = "<h3>%s</h3> %s"
-            if self.iscorrect(self.answer.value):
+            ind = [a[0] for a in self.__sanswers].index(self.answer.value)
+            if self.__sanswers[ind][1]["status"]:
                 mode = "Correct: "
             else:
                 mode = "Incorrect: "
             self.feedback.value = template%(mode,
-                                            markdown.markdown(self.__sanswers[self.aindex(self.answer.value)][1]["feedback"]))
+                                            markdown.markdown(self.__sanswers[ind][1]["feedback"]))
         except Exception as error:
             self.label.value = "error in onsubmit: %s %s"%(self.answer.value, str(error))
 
-class ATWidget(ipw.VBox):
+class ATWidget(QWidget):
     def __init__(self, q):
-        if q["kind"] != "AT":
+        if q.kind != "AT":
             raise TypeError("wrong type of question")
         self.__q = q
         self.label = ipw.Label(value="Select all True Answers")
-        self.question = ipw.HTML(markdown.markdown(q["question"]))
+        self.question = ipw.HTML(markdown.markdown(q.question))
         self.feedback = ipw.HTML()
         self.submit = ipw.Button(description="submit") 
-        self.__sanswers = list(q["answers"].items())
+        self.__sanswers = list(q.responses.items())
         random.shuffle(self.__sanswers)
-        options = [a[1]["answer"] for a in self.__sanswers]
+        options = [a[0] for a in self.__sanswers]
         self.answer = ipw.SelectMultiple( options = options,
                                             description = '')
         self.submit.on_click(self.onsubmit)
-        super(ATWidget, self).__init__(children=[self.label,
+        super(ATWidget, self).__init__(q, children=[self.label,
                                                  self.question, 
                                                  self.answer, 
                                                  self.submit,
@@ -323,18 +357,18 @@ class ATWidget(ipw.VBox):
         try:
             fb = ""
             for a in self.__sanswers:
-                if a[1]["answer"] in self.answer.value:
-                    if self.istrue(a[1]["answer"]):
+                if a[0] in self.answer.value:
+                    if a[1]["status"]:
                         mode = "Correct: "
                     else:
                         mode = "Incorrect: "
                 else:
-                    if self.istrue(a[1]["answer"]):
+                    if a[1]["status"]:
                         mode = "Incorrect: "
                     else:
                         mode = "Correct: "
                 fb = fb + "<h4>%s %s</h4> %s\n"%(mode,
-                                                 a[1]["answer"],
+                                                 a[0],
                                                        markdown.markdown(a[1]["feedback"]))
                     
 
@@ -343,26 +377,26 @@ class ATWidget(ipw.VBox):
             self.label.value = "error in onsubmit: %s %s"%(self.answer.value, str(error))
 
 def get_widget(q):
-    if q["kind"] == "TF":
+    if q.kind == "TF":
         return TFWidget(q)
-    elif q["kind"] == "MC":
+    elif q.kind == "MC":
         return MCWidget(q)
-    elif q["kind"] == "AT":
+    elif q.kind == "AT":
         return ATWidget(q)
-    elif q["kind"] == "FR":
+    elif q.kind == "FR":
         return FRWidget(q)
     else:
         raise ValueError("no matching widget for question type")
 
 def save_questions(questions, file):
-    with open(os.path.join(dminteract.DBDIR, file), "w") as fp:
-        yaml.dump_all(questions,fp)
+    with open(os.path.join(_dbdir(), file), "w") as fp:
+        yaml.dump_all([q.to_dict() for q in questions],fp)
 
 
 def load_questions(file):
     """
 
     """
-    with open(os.path.join(dminteract.DBDIR, file), "r") as fp:
-        questions = list(yaml.load_all(fp, Loader=yaml.SafeLoader))
+    with open(os.path.join(_dbdir(), file), "r") as fp:
+        questions = [Question(**q) for q in yaml.load_all(fp, Loader=yaml.SafeLoader)]
     return questions
