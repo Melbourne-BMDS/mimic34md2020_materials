@@ -280,3 +280,20 @@ responses:
     status: null
 tags: mimic,mf
 uuid: 8ba4e65c-b94b-11ea-936c-0242ac190002
+---
+kind: MC
+question: '## Introducing Myself
+
+  ### Two Truths and a Lie'
+responses:
+  A naive Bayes calculation would estimate my probability of death before age 18 of around 85%:
+    feedback: ''
+    status: false
+  I have a 27-year-old son.:
+    feedback: ''
+    status: false
+  I make my own bicycle frames:
+    feedback: ''
+    status: true
+tags: bec,intro
+uuid: 904d5aa4-b98c-11ea-936c-0242ac190002
