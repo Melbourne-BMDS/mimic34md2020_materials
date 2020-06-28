@@ -188,3 +188,95 @@ responses:
     status: true
 tags: ibis,practice
 uuid: 762a9164-b8f1-11ea-83b9-0242ac190002
+---
+kind: MC
+question: '#### How many of the patients in the database are male?'
+responses:
+  '40':
+    feedback: ''
+    status: false
+  '45':
+    feedback: t_pat.filter([t_pat.gender=='M']).count().execute(limit=None)
+    status: true
+  '55':
+    feedback: ''
+    status: false
+  '60':
+    feedback: ''
+    status: false
+tags: mimic,mf
+uuid: 1dec6464-b946-11ea-936c-0242ac190002
+---
+kind: MC
+question: '### Which of the following is _NOT_ an admission type in the demo database'
+responses:
+  ELECTIVE:
+    feedback: ''
+    status: false
+  EMERGENCY:
+    feedback: ''
+    status: false
+  NEWBORN:
+    feedback: ''
+    status: true
+  URGENT:
+    feedback: ''
+    status: false
+tags: mimic,mf
+uuid: 31d320b0-b948-11ea-936c-0242ac190002
+---
+kind: TF
+question: '#### There are 4 `chartevent` rows that had both an error and a warning.'
+responses:
+  F:
+    feedback: '```Python
+
+      t_chart.filter([t_chart.warning==1.0, t_chart.error==1.0]).count().execute()
+
+      ```'
+    status: false
+  T:
+    feedback: '```Python
+
+      t_chart.filter([t_chart.warning==1.0, t_chart.error==1.0]).count().execute()
+
+      ```'
+    status: true
+tags: mimic,mf
+uuid: 48046f64-b949-11ea-936c-0242ac190002
+---
+kind: FR
+question: "## Respiratory Therapist Charting\n\nUse Ibis to estimate how many chart\
+  \ events were recorded by a respiratory therapist. \n\nPost your answer and how\
+  \ you arrived at it on the #exercises channel on Slack\n\n__Hint:__ start with the\
+  \ `tnew` table object"
+responses:
+  0:
+    feedback: '#### My solution method
+
+
+      First, I used the distinct() method find all the unique care giver labels.
+
+
+      ```Python
+
+      tnew.cg_label.distinct().execute()
+
+      ```
+
+
+      Then I formed a filter using the values that I guessed represented an RT.
+
+
+      ```Python
+
+      tnew.filter(tnew.cg_label.like(["RRT", "RT", "RTH", "RTStu", "RTS", "RRTs"])).cg_label.count().execute(limit=None)
+
+      ```
+
+
+      Unless `execute` is passed a limit of `None`, the number of results is limited
+      to a set value.'
+    status: null
+tags: mimic,mf
+uuid: 8ba4e65c-b94b-11ea-936c-0242ac190002

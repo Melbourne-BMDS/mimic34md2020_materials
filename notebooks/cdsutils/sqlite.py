@@ -15,6 +15,10 @@ def itview(t):
                  start=ipw.IntSlider(min=0, max=nrows, value=0))
 
 
+def cast_df_times(df):
+    time_cols = [c for c in df.columns if 'time' in c.lower()]
+    df[time_cols] = df[time_cols].apply(pd.to_datetime)
+    return df
 
 
 
