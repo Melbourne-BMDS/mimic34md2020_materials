@@ -1,0 +1,7 @@
+Population en 2009	113 085	1 561 745
+Densité de la population (nombre d'habitants au km²) en 2009	18 328,2	8 893,3
+Superficie (en km²)	6,2	175,6
+Variation de la population : taux annuel moyen entre 1999 et 2009, en %	0,6	0,9
+dont variation due au solde naturel : taux annuel moyen entre 1999 et 2009, en %	0,8	1,0
+dont variation due au solde apparent des entrées sorties : taux annuel moyen entre 1999 et 2009, en %	-0,2	-0,1
+Nombre de ménages en 2009	55 201	689 130

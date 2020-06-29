@@ -1,0 +1,11 @@
+South East England	£21,109
+Northern Ireland	£19,603
+East Anglia	£19,469
+Scotland	£19,282
+North West England	£19,236
+West Midlands	£18,801
+South West England	£18,629
+Yorkshire & the Humber	£18,614
+East Midlands	£18,321
+Wales	£17,651
+North East England	£17,594
