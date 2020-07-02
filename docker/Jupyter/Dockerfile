@@ -44,9 +44,9 @@ RUN pip install pycontextnlp \
     kanren \
     pymysql \
     tinydb \
-    ibis-framework[postgres,bigquery,sqlite,mysql]
+    ibis-framework[postgres,bigquery,sqlite,mysql] \
+    gensim==3.8.3
 
-RUN pip install git+https://github.com/chapmanbe/dminteract#egg=dminteract
 
 WORKDIR /home/jovyan
 
