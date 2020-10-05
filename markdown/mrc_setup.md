@@ -51,5 +51,8 @@ In the video I select `uom.general.2c8g`. If this is not available, you will pro
 
 - Click on "Next" and then since we do not have a volume to connect click on "Next" again.
 - On the popup page requesting a username and password, select any username you would like (e.g. "brian"). You need to be __careful__ with the password! The connection to the notebook will __not__ be encrypted so do not use a password you use elsewhere. To reduce your risk, use the [university's VPN](https://studentit.unimelb.edu.au/wireless-vpn/vpn) when connecting to the server.
+- Click on __Create__
+- Once the instance is created, click on "Deploy This Environment"
+- Once the environment is deployed the IP address of the server will appear as a hyperlink.
 
 [Here is a video](https://youtu.be/Rkkqv-cXhIw) of me going through these steps.
