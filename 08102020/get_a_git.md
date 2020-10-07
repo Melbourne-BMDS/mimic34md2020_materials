@@ -1,5 +1,7 @@
 ## Working with a GitHub repository
 
+[Here is a YouTube video](https://youtu.be/gGYOWnV-qhg) of me working through the steps described here.
+
 In an excellent reproducible science method, the authors of the paper provide a [GitHub repository](https://github.com/Jeffreylin0925/MIMIC-III_ICU_Readmission_Analysis) with the code they used in the paper.
 
 ![PLOS One Paper Repository](media/repository.png)
