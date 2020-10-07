@@ -1,0 +1,26 @@
+name: mimic34md2020
+channels:
+  - conda-forge
+dependencies:
+  - python=3.7
+  - pyarrow=0.17
+  - vega=2.5.0
+  - altair=4.1.0=py_1
+  - psycopg2
+  - spacy=2.2.2
+  - numpy
+  - pandas
+  - pip
+  - matplotlib
+  - pip:
+    - pymysql 
+    - pycontextnlp
+    - radnlp
+    - cycontext
+    - clinical-sectionizer==0.1.2
+    - medspacy==0.0.1
+    - https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz
+    - https://github.com/abchapman93/spacy_models/raw/master/releases/en_info_3700_i2b2_2012-0.1.0/dist/en_info_3700_i2b2_2012-0.1.0.tar.gz
+    - markdown
+    - ibis-framework[postgres,bigquery,sqlite,mysql]
+
