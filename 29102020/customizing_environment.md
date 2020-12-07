@@ -1,4 +1,4 @@
-# How to Create an Environment that Matches the Cod
+# How to Create an Environment that Matches the Code
 
 ## Software evolves
 ### Backwards compatibility is not guaranteed (in general)
