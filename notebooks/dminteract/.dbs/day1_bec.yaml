@@ -64,3 +64,236 @@ responses:
     status: false
 tags: data, information
 uuid: 8add0c98-b619-11ea-b07b-0242ac1b0003
+---
+kind: TF
+question: The best explanation of what just happened is that Brian lied about strings
+  being case sensitive
+responses:
+  F:
+    feedback: Actually, strings are case sensitive but the `like` method is NOT case
+      sensitive.
+    status: true
+  T:
+    feedback: I would never lie to you!
+    status: false
+tags: ibis, food, case
+uuid: 1fe3c870-b8dd-11ea-83b9-0242ac190002
+---
+kind: MC
+question: '#### Fixing the `like` query.
+
+
+  In my query
+
+
+  ```Python
+
+  tnew.filter([tnew.food_name.like(["%Pepsi%", "%Cola%"])]).execute()
+
+  ```
+
+
+  We inadvertently captured `chocolate`. Modify the filter so that you don''t capture
+  `chocolate` and count how many rows you return that contain `Pepsi` or `Cola`.  '
+responses:
+  '0':
+    feedback: I'm guessing you created a filter looking for more things than you think.
+    status: false
+  '2':
+    feedback: 'Incorrect: You might want to think about what you have at the end of
+      `Cola` in your filter.'
+    status: false
+  '3':
+    feedback: Tr.y again
+    status: false
+  '4':
+    feedback: That is correct!
+    status: true
+tags: ibis,food,like
+uuid: dd158276-b8e2-11ea-83b9-0242ac190002
+---
+kind: TF
+question: There are no duplicated episode names.
+responses:
+  F:
+    feedback: Did you compare distinct counts?
+    status: false
+  T:
+    feedback: I determined this by counting the distinct episode names and comparing
+      this to the count of unique episode_id values.
+    status: true
+tags: ibis,practice
+uuid: a5a6f5da-b8ed-11ea-83b9-0242ac190002
+---
+kind: MC
+question: What is the name of the episode that contains food(s) with mint AND chocolate.
+responses:
+  The Heart Attack:
+    feedback: ''
+    status: false
+  The Hot Tub:
+    feedback: ''
+    status: false
+  The Merv Griffin Show:
+    feedback: ''
+    status: false
+  The Wait Out:
+    feedback: ''
+    status: true
+tags: ibis,practice
+uuid: 493b85da-b8ee-11ea-83b9-0242ac190002
+---
+kind: TF
+question: Six seasons have episodes that mention some form of turkey.
+responses:
+  F:
+    feedback: I counted 7
+    status: true
+  T:
+    feedback: 'I used `tnew.food_name.like("%turkey%")` '
+    status: false
+tags: ibis,practice
+uuid: f524113c-b8ee-11ea-83b9-0242ac190002
+---
+kind: AT
+question: Which of the following episodes DOES NOT mention a type of food with eggs.
+responses:
+  The Baby Shower:
+    feedback: ''
+    status: true
+  The Calzone:
+    feedback: ''
+    status: false
+  The Chinese Restaurant:
+    feedback: ''
+    status: true
+  The Wizard:
+    feedback: ''
+    status: false
+tags: ibis,practice
+uuid: 240c5b84-b8f0-11ea-83b9-0242ac190002
+---
+kind: TF
+question: There are three episodes in season 4 that mention soup or cereal.
+responses:
+  F:
+    feedback: "Here is my query:\n\n```Python\ntnew.filter([(tnew.food_category ==\
+      \ \"Soup\") | \n             (tnew.food_category == \"Cereal\"),\n         \
+      \    tnew.season==4]).execute()\n```"
+    status: false
+  T:
+    feedback: "Here is my query:\n\n```Python\ntnew.filter([(tnew.food_category ==\
+      \ \"Soup\") | \n             (tnew.food_category == \"Cereal\"),\n         \
+      \    tnew.season==4]).execute()\n```"
+    status: true
+tags: ibis,practice
+uuid: 762a9164-b8f1-11ea-83b9-0242ac190002
+---
+kind: MC
+question: '#### How many of the patients in the database are male?'
+responses:
+  '40':
+    feedback: ''
+    status: false
+  '45':
+    feedback: t_pat.filter([t_pat.gender=='M']).count().execute(limit=None)
+    status: true
+  '55':
+    feedback: ''
+    status: false
+  '60':
+    feedback: ''
+    status: false
+tags: mimic,mf
+uuid: 1dec6464-b946-11ea-936c-0242ac190002
+---
+kind: MC
+question: '### Which of the following is _NOT_ an admission type in the demo database'
+responses:
+  ELECTIVE:
+    feedback: ''
+    status: false
+  EMERGENCY:
+    feedback: ''
+    status: false
+  NEWBORN:
+    feedback: ''
+    status: true
+  URGENT:
+    feedback: ''
+    status: false
+tags: mimic,mf
+uuid: 31d320b0-b948-11ea-936c-0242ac190002
+---
+kind: TF
+question: '#### There are 4 `chartevent` rows that had both an error and a warning.'
+responses:
+  F:
+    feedback: '```Python
+
+      t_chart.filter([t_chart.warning==1.0, t_chart.error==1.0]).count().execute()
+
+      ```'
+    status: false
+  T:
+    feedback: '```Python
+
+      t_chart.filter([t_chart.warning==1.0, t_chart.error==1.0]).count().execute()
+
+      ```'
+    status: true
+tags: mimic,mf
+uuid: 48046f64-b949-11ea-936c-0242ac190002
+---
+kind: FR
+question: "## Respiratory Therapist Charting\n\nUse Ibis to estimate how many chart\
+  \ events were recorded by a respiratory therapist. \n\nPost your answer and how\
+  \ you arrived at it on the #exercises channel on Slack\n\n__Hint:__ start with the\
+  \ `tnew` table object"
+responses:
+  0:
+    feedback: '#### My solution method
+
+
+      First, I used the distinct() method find all the unique care giver labels.
+
+
+      ```Python
+
+      tnew.cg_label.distinct().execute()
+
+      ```
+
+
+      Then I formed a filter using the values that I guessed represented an RT.
+
+
+      ```Python
+
+      tnew.filter(tnew.cg_label.like(["RRT", "RT", "RTH", "RTStu", "RTS", "RRTs"])).cg_label.count().execute(limit=None)
+
+      ```
+
+
+      Unless `execute` is passed a limit of `None`, the number of results is limited
+      to a set value.'
+    status: null
+tags: mimic,mf
+uuid: 8ba4e65c-b94b-11ea-936c-0242ac190002
+---
+kind: MC
+question: '## Introducing Myself
+
+  ### Two Truths and a Lie'
+responses:
+  A naive Bayes calculation would estimate my probability of death before age 18 of around 85%:
+    feedback: ''
+    status: false
+  I have a 27-year-old son.:
+    feedback: ''
+    status: false
+  I make my own bicycle frames:
+    feedback: ''
+    status: true
+tags: bec,intro
+uuid: 904d5aa4-b98c-11ea-936c-0242ac190002
