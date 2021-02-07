@@ -25,7 +25,7 @@ cloudpickle @ file:///home/conda/feedstock_root/build_artifacts/cloudpickle_1588
 colorcet==2.0.2
 conda==4.8.2
 conda-package-handling==1.6.0
-cryptography==2.9.2
+cryptography==3.2
 cycler==0.10.0
 cycontext==1.0.3
 cymem==2.0.3
