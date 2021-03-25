@@ -159,7 +159,7 @@ python-json-logger==0.1.11
 pytz==2020.1
 pyviz-comms==0.7.5
 PyWavelets==1.1.1
-PyYAML==5.3.1
+PyYAML==5.4
 pyzmq==19.0.1
 qtconsole @ file:///home/conda/feedstock_root/build_artifacts/qtconsole_1592845750760/work
 QtPy==1.9.0
