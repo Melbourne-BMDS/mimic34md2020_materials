@@ -140,7 +140,7 @@ pyct==0.4.6
 pycurl==7.43.0.5
 pydata-google-auth==1.1.0
 PyFastNER==1.0.8b9
-Pygments==2.6.1
+Pygments==2.7.4
 PyJWT==1.7.1
 pymongo==3.10.1
 PyMySQL==0.9.3
