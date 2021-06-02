@@ -202,7 +202,7 @@ traitlets==4.3.3
 typing-extensions @ file:///home/conda/feedstock_root/build_artifacts/typing_extensions_1588470653596/work
 Unidecode==1.1.1
 unification==0.2.2
-urllib3==1.25.9
+urllib3==1.26.5
 vega==2.5.0
 vincent==0.4.4
 wasabi==0.7.0
