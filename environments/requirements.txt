@@ -31,7 +31,7 @@ cycontext==1.0.3
 cymem==2.0.3
 Cython @ file:///home/conda/feedstock_root/build_artifacts/cython_1590009855132/work
 cytoolz==0.10.1
-dask==2.15.0
+dask==2021.10.0
 decorator==4.4.2
 defusedxml==0.6.0
 dill==0.3.1.1
