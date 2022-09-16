@@ -84,7 +84,7 @@ kanren==0.2.3
 kiwisolver==1.2.0
 llvmlite==0.31.0
 locket==0.2.0
-Mako==1.1.0
+Mako==1.2.2
 Markdown @ file:///home/conda/feedstock_root/build_artifacts/markdown_1589366472132/work
 MarkupSafe==1.1.1
 matplotlib==3.2.1
